@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
@@ -10,17 +10,34 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import jobTypes from "../assets/jobRole.json";
 
 const steps = ['Basic Informations', 'Contact Details', 'Education Details', 'Review and Submit'];
 
 
 function Userinput() {
     const [activeStep, setActiveStep] = React.useState(0);
+
+    const [resumeData,setResumeData] = useState({
+        fullName:"",
+        location:"",
+        job:"",
+        email:"",
+        phone:"",
+        linkedin:"",
+        github:"",
+        degree:"",
+        university:"",
+        passOut:"",
+        skills:[],
+        summary:""
+    })
+
+
     const [skipped, setSkipped] = React.useState(new Set());
 
+    console.log(resumeData);
     
-
-   
 
     const handleNext = () => {
         let newSkipped = skipped;
@@ -42,17 +59,19 @@ function Userinput() {
                 <div>
                     <h3>Personal Details</h3>
                     <div className="row p-4 m-2">
-                        <TextField id="standard-basic-name" label="Full Name" variant="standard" />
-                        <TextField id="standard-basic-location" label="Location" variant="standard" />
+                        <TextField name='fullName' onChange={e=>setResumeData({...resumeData,fullName:e.target.value})} id="standard-basic-name" label="Full Name" variant="standard" />
+                        <TextField name='location' onChange={e=>setResumeData({...resumeData,location:e.target.value})} id="standard-basic-location"  label="Location" variant="standard" />
                         <FormControl variant="standard" >
                             <InputLabel id="demo-simple-select-standard-label">Choose Job Title</InputLabel>
                             <Select
+                                onChange={e=>setResumeData({...resumeData,job:e.target.value})}
+                                defaultValue={""}
                                 labelId="demo-simple-select-standard-label"
                                 id="demo-simple-select-standard"
                                 label="Age" variant='standard'
                             >
-                                
-                                <MenuItem value={10}>Ten</MenuItem>
+                                {jobTypes.jobRoles.map(role=>( <MenuItem key={role} value={role}>{role}</MenuItem>))}
+                               
                                 
                             </Select>
                         </FormControl>

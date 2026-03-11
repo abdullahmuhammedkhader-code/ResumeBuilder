@@ -1,6 +1,7 @@
 import React from 'react'
 import Userinput from "../components/Userinput"
-import Preview from "../components/Preview"
+import Preview from '../Components/Preview'
+
 function UserForms() {
   return (
     <div className="container my-5">
