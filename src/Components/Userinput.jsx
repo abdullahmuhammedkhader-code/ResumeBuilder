@@ -11,28 +11,14 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import jobTypes from "../assets/jobRole.json";
+import skillJSON from "../assets/jobSkills.json"
+import summaryJSON from "../assets/summaries.json"
 
 const steps = ['Basic Informations', 'Contact Details', 'Education Details', 'Review and Submit'];
 
 
-function Userinput() {
+function Userinput({resumeData,setResumeData}) {
     const [activeStep, setActiveStep] = React.useState(0);
-
-    const [resumeData,setResumeData] = useState({
-        fullName:"",
-        location:"",
-        job:"",
-        email:"",
-        phone:"",
-        linkedin:"",
-        github:"",
-        degree:"",
-        university:"",
-        passOut:"",
-        skills:[],
-        summary:""
-    })
-
 
     const [skipped, setSkipped] = React.useState(new Set());
 
@@ -51,6 +37,10 @@ function Userinput() {
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
     };
 
+    const generateAI = ()=>{
+        setResumeData({...resumeData,skills:skillJSON[resumeData.job],summary:summaryJSON[resumeData.job]})
+        handleNext()
+    }
 
     
     const renderStepContent = (stepCount) => {
@@ -59,8 +49,8 @@ function Userinput() {
                 <div>
                     <h3>Personal Details</h3>
                     <div className="row p-4 m-2">
-                        <TextField name='fullName' onChange={e=>setResumeData({...resumeData,fullName:e.target.value})} id="standard-basic-name" label="Full Name" variant="standard" />
-                        <TextField name='location' onChange={e=>setResumeData({...resumeData,location:e.target.value})} id="standard-basic-location"  label="Location" variant="standard" />
+                        <TextField name='fullName' onChange={e=>setResumeData({...resumeData,fullName:e.target.value})} id="standard-basic-name" label="Full Name" variant="standard" value={resumeData.fullName} />
+                        <TextField name='location' onChange={e=>setResumeData({...resumeData,location:e.target.value})} id="standard-basic-location"  label="Location" variant="standard" value={resumeData.location} />
                         <FormControl variant="standard" >
                             <InputLabel id="demo-simple-select-standard-label">Choose Job Title</InputLabel>
                             <Select
@@ -83,10 +73,10 @@ function Userinput() {
                 <div>
                     <h3>Contact Details</h3>
                     <div className="row p-4 m-2">
-                        <TextField id="standard-basic-email" label="Email" variant="standard" />
-                        <TextField id="standard-basic-phone" label="Phone Number" variant="standard" />
-                        <TextField id="standard-basic-linkedin" label="LinkedIn" variant="standard" />
-                        <TextField id="standard-basic-github" label="Git-Hub Link" variant="standard" />
+                        <TextField id="standard-basic-email" label="Email" variant="standard" onChange={e=>setResumeData({...resumeData,email:e.target.value})}  value={resumeData.email}/>
+                        <TextField id="standard-basic-phone" label="Phone Number" variant="standard" onChange={e=>setResumeData({...resumeData,phone:e.target.value})} value={resumeData.phone} />
+                        <TextField id="standard-basic-linkedin" label="LinkedIn" variant="standard" onChange={e=>setResumeData({...resumeData,linkedin:e.target.value})} value={resumeData.linkedin} />
+                        <TextField id="standard-basic-github" label="Git-Hub Link" variant="standard" onChange={e=>setResumeData({...resumeData,github:e.target.value})} value={resumeData.github} />
                         
 
                     </div>
@@ -96,9 +86,9 @@ function Userinput() {
                 <div>
                     <h3>Education Details</h3>
                     <div className="row p-4 m-2">
-                        <TextField id="standard-basic-degree" label="Bachelor's Degree" variant="standard" />
-                        <TextField id="standard-basic-college" label="University-College Name" variant="standard" />
-                        <TextField id="standard-basic-year" label="Year of Graduation" variant="standard" />
+                        <TextField id="standard-basic-degree" label="Bachelor's Degree" variant="standard" onChange={e=>setResumeData({...resumeData,degree:e.target.value})} value={resumeData.degree} />
+                        <TextField id="standard-basic-college" label="University-College Name" variant="standard" onChange={e=>setResumeData({...resumeData,university:e.target.value})} value={resumeData.university} />
+                        <TextField id="standard-basic-year" label="Year of Graduation" variant="standard" onChange={e=>setResumeData({...resumeData,passOut:e.target.value})} value={resumeData.passOut} />
                         
 
                     </div>
@@ -130,7 +120,7 @@ function Userinput() {
             {activeStep === steps.length ? (
                 <React.Fragment>
                     <Typography sx={{ mt: 2, mb: 1 }}>
-                        All steps completed - you&apos;re finished
+                        All steps completed 
                     </Typography>
                     <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
                         <Box sx={{ flex: '1 1 auto' }} />
@@ -158,7 +148,7 @@ function Userinput() {
                         
                         {
                             activeStep === steps.length - 1 ?
-                            <Button >
+                            <Button onClick={generateAI} >
                              Generate AI skills and Summary</Button> : 
                              <Button onClick={handleNext}>
                              Next
